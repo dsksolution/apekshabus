@@ -5,29 +5,133 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bus Timetable</title>
   <style>
+    /* Import Poppins font */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+    /* General Styles */
     body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: white;
+      background-image: url('https://srilankamirror.com/wp-content/uploads/2025/01/Apeksha_2-683x1024.jpg'); /* Replace with your background image URL */
+      background-size: cover;
+      background-position: center;
+      position: relative;
     }
+
+    /* Black Overlay */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.75); /* 75% transparent black */
+      z-index: -1;
+    }
+
+    /* Header Section */
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    header img {
+      width: 100px; /* Adjust logo size */
+      margin-bottom: 10px;
+    }
+
+    header h1,
+    header h2 {
+      margin: 0;
+      font-weight: bold;
+    }
+
+    header h2 {
+      font-size: 18px;
+      margin-top: 5px;
+    }
+
+    /* Search Bar */
     #search-bar {
       width: 300px;
       padding: 10px;
       font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      text-align: center;
+      margin: 0 auto;
+      display: block;
+      background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+      color: white;
+      outline: none;
     }
+
+    #search-bar::placeholder {
+      color: white;
+    }
+
+    /* Results Section */
     #results {
       margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
+
     .bus-item {
-      border: 1px solid #ccc;
-      padding: 10px;
+      position: relative;
+      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+      padding: 15px;
       margin-bottom: 10px;
-      border-radius: 5px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .bus-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .bus-item::before {
+      content: '🚌'; /* Bus icon */
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 24px;
+    }
+
+    .bus-item p {
+      margin: 5px 0;
+      font-weight: bold;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      #search-bar {
+        width: 80%;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Bus Timetable</h1>
+  <!-- Header Section -->
+  <header>
+    <img src="https://via.placeholder.com/100" alt="Logo"> <!-- Replace with your logo URL -->
+    <h1>Bus Timetable</h1>
+    <h2>Welcome! Search for buses by starting town.</h2>
+  </header>
+
+  <!-- Search Bar -->
   <input type="text" id="search-bar" placeholder="Search by Starting Town..." onkeyup="filterBuses()">
+
+  <!-- Results Section -->
   <div id="results"></div>
 
   <script src="app.js"></script>
