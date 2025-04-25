@@ -41,16 +41,14 @@ function displayResults(data) {
     return;
   }
 
-  data.forEach(bus => {
+  data.forEach((bus, index) => {
     const busItem = document.createElement("div");
     busItem.className = "bus-item";
     busItem.innerHTML = `
-      <p><strong>Bus Number:</strong> ${bus.busNumber}</p>
-      <p><strong>Starting Town:</strong> ${bus.startingTown}</p>
-      <p><strong>Departure Time:</strong> ${formatTime(bus.departureTime)}</p>
-      <p><strong>Route:</strong> ${bus.route}</p>
-      <p><strong>Other Details:</strong> ${bus.otherDetails}</p>
+      <span>${bus.startingTown}</span><br>
+      <strong>Departure Time:</strong> ${formatTime(bus.departureTime)}
     `;
+    busItem.onclick = () => openModal(bus); // Open modal on click
     resultsDiv.appendChild(busItem);
   });
 }
@@ -70,6 +68,38 @@ function formatTime(timeString) {
   // Create a formatted time string
   const date = new Date(year, month, day, hours, minutes);
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+// Open modal with bus details
+function openModal(bus) {
+  const modal = document.getElementById("modal");
+  const modalBusNumber = document.getElementById("modal-bus-number");
+  const modalStartingTown = document.getElementById("modal-starting-town");
+  const modalDepartureTime = document.getElementById("modal-departure-time");
+  const modalRoute = document.getElementById("modal-route");
+  const modalOtherDetails = document.getElementById("modal-other-details");
+
+  // Populate modal fields
+  modalBusNumber.textContent = bus.busNumber;
+  modalStartingTown.textContent = bus.startingTown;
+  modalDepartureTime.textContent = formatTime(bus.departureTime);
+  modalRoute.textContent = bus.route;
+  modalOtherDetails.textContent = bus.otherDetails;
+
+  // Show modal
+  modal.style.display = "block";
+
+  // Close modal when clicking the close button or outside the modal
+  const closeButton = document.querySelector(".close");
+  closeButton.onclick = () => closeModal(modal);
+  window.onclick = (event) => {
+    if (event.target === modal) closeModal(modal);
+  };
+}
+
+// Close modal
+function closeModal(modal) {
+  modal.style.display = "none";
 }
 
 // Filter buses based on search input
