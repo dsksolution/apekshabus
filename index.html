@@ -90,6 +90,7 @@
       max-width: 400px;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       cursor: pointer;
+      text-align: center;
     }
 
     .bus-item:hover {
@@ -97,9 +98,44 @@
       box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
     }
 
-    .bus-item p {
-      margin: 5px 0;
+    .bus-item span {
       font-weight: bold;
+      color: #FFD700; /* Highlight Starting Town */
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8); /* Dark overlay */
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 500px;
+      color: black;
+      text-align: left;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: white;
     }
 
     /* Responsive Design */
@@ -123,6 +159,19 @@
 
   <!-- Results Section -->
   <div id="results"></div>
+
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Bus Details</h2>
+      <p><strong>Bus Number:</strong> <span id="modal-bus-number"></span></p>
+      <p><strong>Starting Town:</strong> <span id="modal-starting-town"></span></p>
+      <p><strong>Departure Time:</strong> <span id="modal-departure-time"></span></p>
+      <p><strong>Route:</strong> <span id="modal-route"></span></p>
+      <p><strong>Other Details:</strong> <span id="modal-other-details"></span></p>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
