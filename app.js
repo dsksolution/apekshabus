@@ -16,10 +16,11 @@ async function fetchData() {
 
     // Map the rows to an array of objects
     busData = json.table.rows.map(row => ({
-      startingTown: row.c[0]?.v.trim() || "", // Trim whitespace
-      departureTime: row.c[1]?.v || "",
-      busNumber: row.c[2]?.v || "",
-      otherDetails: row.c[3]?.v || ""
+      startingTown: row.c[0]?.v.trim() || "", // Starting Town
+      departureTime: row.c[1]?.v || "", // Departure Time
+      busNumber: row.c[2]?.v || "", // Bus Number
+      otherDetails: row.c[3]?.v || "", // Other Details
+      route: row.c[4]?.v.trim() || "" // Route
     }));
     console.log("Mapped Bus Data:", busData); // Log mapped bus data
 
@@ -36,7 +37,7 @@ function displayResults(data) {
   resultsDiv.innerHTML = ""; // Clear previous results
 
   if (data.length === 0) {
-    resultsDiv.innerHTML = "<p>No buses found for this town.</p>";
+    resultsDiv.innerHTML = "<p>No buses found for this town or route.</p>";
     return;
   }
 
@@ -44,20 +45,39 @@ function displayResults(data) {
     const busItem = document.createElement("div");
     busItem.className = "bus-item";
     busItem.innerHTML = `
-      <strong>Bus Number:</strong> ${bus.busNumber}<br>
-      <strong>Starting Town:</strong> ${bus.startingTown}<br>
-      <strong>Departure Time:</strong> ${bus.departureTime}<br>
-      <strong>Other Details:</strong> ${bus.otherDetails}
+      <p><strong>Bus Number:</strong> ${bus.busNumber}</p>
+      <p><strong>Starting Town:</strong> ${bus.startingTown}</p>
+      <p><strong>Departure Time:</strong> ${formatTime(bus.departureTime)}</p>
+      <p><strong>Route:</strong> ${bus.route}</p>
+      <p><strong>Other Details:</strong> ${bus.otherDetails}</p>
     `;
     resultsDiv.appendChild(busItem);
   });
+}
+
+// Format the departure time from Google Sheets
+function formatTime(timeString) {
+  if (!timeString) return "N/A"; // Handle missing time
+  const match = timeString.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)\)/);
+  if (!match) return timeString; // Return as-is if not in expected format
+
+  const year = parseInt(match[1], 10);
+  const month = parseInt(match[2], 10) + 1; // Months are zero-indexed
+  const day = parseInt(match[3], 10);
+  const hours = parseInt(match[4], 10);
+  const minutes = parseInt(match[5], 10);
+
+  // Create a formatted time string
+  const date = new Date(year, month, day, hours, minutes);
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
 // Filter buses based on search input
 function filterBuses() {
   const query = document.getElementById("search-bar").value.toLowerCase().trim();
   const filteredData = busData.filter(bus =>
-    bus.startingTown.toLowerCase().includes(query)
+    bus.startingTown.toLowerCase().includes(query) || // Search in starting town
+    bus.route.toLowerCase().includes(query) // Search in route
   );
   displayResults(filteredData);
 }
