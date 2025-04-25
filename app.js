@@ -1,4 +1,4 @@
-// Fetch data from Google Sheets
+// Replace this with your actual Google Sheet JSON URL
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/1gUhMuNxbvQulFrBMUbyv_e7XUb7znhHO6t33wmCZs6A/gviz/tq?tqx=out:json";
 
 let busData = [];
@@ -8,16 +8,25 @@ async function fetchData() {
   try {
     const response = await fetch(SHEET_URL);
     const text = await response.text();
-    const json = JSON.parse(text.substring(47).slice(0, -2)); // Clean up Google Sheets JSON
+    console.log("Raw JSON Response:", text); // Log raw JSON response
+
+    // Clean up Google Sheets JSON
+    const json = JSON.parse(text.substring(47).slice(0, -2));
+    console.log("Parsed JSON Data:", json); // Log parsed JSON data
+
+    // Map the rows to an array of objects
     busData = json.table.rows.map(row => ({
-      startingTown: row.c[0]?.v || "",
+      startingTown: row.c[0]?.v.trim() || "", // Trim whitespace
       departureTime: row.c[1]?.v || "",
       busNumber: row.c[2]?.v || "",
       otherDetails: row.c[3]?.v || ""
     }));
+    console.log("Mapped Bus Data:", busData); // Log mapped bus data
+
     displayResults(busData); // Display all buses initially
   } catch (error) {
     console.error("Error fetching data:", error);
+    document.getElementById("results").innerHTML = "<p>Error loading bus data.</p>";
   }
 }
 
@@ -46,7 +55,7 @@ function displayResults(data) {
 
 // Filter buses based on search input
 function filterBuses() {
-  const query = document.getElementById("search-bar").value.toLowerCase();
+  const query = document.getElementById("search-bar").value.toLowerCase().trim();
   const filteredData = busData.filter(bus =>
     bus.startingTown.toLowerCase().includes(query)
   );
